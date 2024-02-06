@@ -80,6 +80,10 @@ def color_by_data(  sele, filename, offset=0, colormap='gray70 yellow orange red
 
     colors=colormap.split(' ')
     cmd.color(colors[0], sele, quiet=1)
+    
+    if len(colors)>4 or len(colors)<3:
+        print('Error: Currently only 3 or 4 colors are supported')
+        return
 
     for resid, val in zip(nmrpymol.res, nmrpymol.vals):
         resid=int(resid)+int(offset)
