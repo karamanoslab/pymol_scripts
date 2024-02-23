@@ -77,9 +77,18 @@ def color_by_data(  sele, filename, offset=0, colormap='gray70 yellow orange red
         color_by_data 6u3r and resid 1:60,  data.txt ,   colormap=gray70 yellow orange red
     """
     nmrpymol=NMRpymol(filename, sele)
+    print(nmrpymol.sele_resis)
 
     colors=colormap.split(' ')
-    cmd.color(colors[0], sele, quiet=1)
+    cmd.color('gray70', sele, quiet=1)
+    
+    miss_sele=''
+    for pdb_res in nmrpymol.sele_resis:
+        if pdb_res not in nmrpymol.res:
+            print('Missing residue: %i' %pdb_res)
+            miss_sele += 'resid %i or ' %pdb_res
+    cmd.select('Missing_resis', miss_sele[:-4])
+    cmd.disable('Missing_resis')
     
     if len(colors)>4 or len(colors)<3:
         print('Error: Currently only 3 or 4 colors are supported')
@@ -124,7 +133,6 @@ def color_by_data(  sele, filename, offset=0, colormap='gray70 yellow orange red
                             
         else:
             cmd.color('gray30', '%s and resid %i' %(sele, resid))
-
     
 cmd.extend("alterBfactors", alterBfactors)
 cmd.extend("color_by_data", color_by_data)
